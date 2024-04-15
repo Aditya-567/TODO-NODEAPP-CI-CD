@@ -38,9 +38,9 @@ pipeline {
         
         stage('Preview') {
             steps {
-                // If you want to run a preview as part of your pipeline, you can include this.
-                // Be aware that preview may start a server, which will hang the build if not handled.
-                sh 'npm run preview'
+                timeout(time: 5, unit: 'MINUTES') { // Adjust the time as needed
+                    sh 'npm run preview &'
+                }
             }
         }
         
