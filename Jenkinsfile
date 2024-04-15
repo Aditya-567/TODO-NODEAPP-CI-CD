@@ -1,7 +1,7 @@
 pipeline {
     agent any
     
-    // Define the tools to use. Jenkins will use the NodeJS installation defined in the Global Tool Configuration.
+    // Using the 'NodeJS' tool from the Jenkins Global Tool Configuration
     tools {
         nodejs 'NodeJS'
     }
@@ -9,53 +9,59 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                // This step is handled automatically by Jenkins when the Pipeline job starts.
+                // Automatically performed by Jenkins
                 echo 'Checking out the code...'
             }
         }
         
         stage('Install Dependencies') {
             steps {
-                // This will run 'npm install' in the root directory where your project is checked out.
+                // This will install both the devDependencies and dependencies from your package.json
                 sh 'npm install'
-            }
-        }
-        
-        stage('Run Tests') {
-            steps {
-                // This will run 'npm test'. Make sure you have your test scripts defined in your package.json.
-                sh 'npm test'
             }
         }
         
         stage('Build') {
             steps {
-                // This will run 'npm run build'. Ensure you have a 'build' script in your package.json.
+                // This will run the TypeScript compiler and then Vite build according to your build script
                 sh 'npm run build'
             }
         }
         
-        stage('Deploy') {
+        // You don't have a test script in package.json. If you add one, you can uncomment this.
+        // stage('Run Tests') {
+        //     steps {
+        //         // Run the test script here
+        //         sh 'npm test'
+        //     }
+        // }
+        
+        stage('Preview') {
             steps {
-                // Here you add your deployment commands.
-                // This is just a placeholder; you must replace it with actual deployment commands.
-                echo 'Deployment step will be executed here.'
+                // If you want to run a preview as part of your pipeline, you can include this.
+                // Be aware that preview may start a server, which will hang the build if not handled.
+                sh 'npm run preview'
             }
         }
+        
+        // Include your deployment stage here
+        // stage('Deploy') {
+        //     steps {
+        //         // Add your deployment commands here
+        //         sh '<deployment_command>'
+        //     }
+        // }
     }
     
     post {
         always {
-            // This block runs after the stages no matter the result.
-            echo 'The Pipeline has finished executing.'
+            echo 'This will always run'
         }
         success {
-            // This block runs only if the Pipeline succeeds.
-            echo 'Build was successful. Deployment can proceed.'
+            echo 'Build was successful.'
         }
         failure {
-            // This block runs only if the Pipeline fails.
-            echo 'Build failed. Check the logs for errors.'
+            echo 'Build failed.'
         }
     }
 }
