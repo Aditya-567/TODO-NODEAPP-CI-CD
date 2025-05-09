@@ -1,7 +1,7 @@
 pipeline {
     agent any
     
-    // Using the 'NodeJS' tool from the Jenkins Global Tool Configuration
+    // Using the 'NodeJS' tool from the Jenkins Global Tool Configuration hehehehehehe
     tools {
         nodejs 'NodeJS'
     }
